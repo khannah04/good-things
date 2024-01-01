@@ -23,6 +23,17 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
             header("Location: ../index.php"); 
             die();  
         }
+
+        //if i'm here, no errors were found! 
+        //which means i can add the note to the db 
+        $user = $_SESSION["user_username"]; 
+        $id = $_SESSION["user_id"]; 
+        create_note($pdo, $note, $user, $id); 
+        
+        header("Location: ../index.php?note=success"); 
+        $pdo = null; 
+        $stmt = null; 
+
     }
     catch(PDOException $e){
         //if errors detected, fail with a specific message 

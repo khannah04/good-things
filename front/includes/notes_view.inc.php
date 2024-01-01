@@ -1,4 +1,5 @@
 <?php
+//FOR CHANGING HOW THE WEBSITE LOOKS BASED OFF OF ERROR MESSAGES
 
 declare(strict_types=1); 
 
@@ -16,5 +17,8 @@ function check_notes_errors(){
         unset($_SESSION['errors_notes']); 
     }
 
-   // else if()
+    else if(isset($_GET['note']) && $_GET['note'] === 'success'){
+        echo '<br>'; 
+        echo '<p class = "form-success">Check your inbox on January 1st!</p>';
+    }
 }
