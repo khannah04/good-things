@@ -73,11 +73,11 @@ function format(object $pdo, object $mail, string $username){
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
         // Compose email content with data from the database
        // $emailContent = "heyhey"; 
-        $emailContent .= "<p> Date: " . $row['created_at'] . " Note: " . $row['note_text'] . "</p>";
+        $emailContent .= "<p> Date: " . substr($row['created_at'], 0, 10) . "</p> <pre>     Note: " . $row['note_text'] . "</pre>";
     }
     if($emailContent === "<p> Hello, and Happy New Year!</p>" .  "<br><p> Below, you'll see all the happiest memories you made this year. Cheers to more in " . ($year+1) . "!</p><br>")
         return null; 
-    
+
     return $emailContent; //returns a string with all info 
 
 }
@@ -98,7 +98,7 @@ function send_email(object $pdo, object $mail, string $username){
     $email = $stmt->fetch(PDO::FETCH_ASSOC)['email']; //email now holds email,, plug into addAddress WHEN NEEDED 
     
     $mail->addAddress('newyearnotes24@gmail.com');     //Add a recipient
-    $mail->addAddress($email);     
+    $mail->addBCC($email);     
     //$mail->addAddress('ellen@example.com', "NAME");               //Name is optional
    /* $mail->addReplyTo('info@example.com', 'Information');
     $mail->addCC('cc@example.com');
@@ -126,8 +126,8 @@ function send_email(object $pdo, object $mail, string $username){
     //getting the current year 
     $year = date("Y"); 
     $mail->Subject = 'Your ' . $year . ' Notes';
-    $mail->Body    =  $email . $emailContent . 'This is the HTML message body <b>in bold!</b>';
-    $mail->AltBody = 'This is the body in plain text for non-HTML mail clients' . strip_tags($emailContent);
+    $mail->Body    =  $emailContent; //. 'This is the HTML message body <b>in bold!</b>';
+    $mail->AltBody = strip_tags($emailContent); //'This is the body in plain text for non-HTML mail clients' . strip_tags($emailContent);
 
     $mail->send();
     echo 'Message has been sent';
